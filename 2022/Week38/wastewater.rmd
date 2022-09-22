@@ -1,0 +1,104 @@
+--- 
+title: TidyTuesday Waste Water Treatment Plant Dataset EDA
+year: 2022
+week: 38
+author: (@dorrajmachai)[https://github.com/dorrajmachai]
+---
+
+# TidyTuesday 2022 - Week 38
+
+This week's TidyTuesday challenge deals with wastewater treatment plants! To begin, let's load our libraries and our data:
+
+
+```{r}
+
+library("lubridate")
+library("tidyverse")
+
+tuesdata <- tidytuesdayR::tt_load(2022, week = 38)
+HydroWASTE_v10 <- tuesdata$HydroWASTE_v10
+```
+
+Okay, now we can take a look at our data and begin our analysis!
+
+```{r}
+
+HydroWASTE_v10 # I am giving this a different title
+dataset <- HydroWASTE_v10
+
+glimpse(dataset)
+colnames(dataset)
+```
+
+So, that's our data! I'm not familiar with this topic and even more unfamiliar with its specifics in this part of the world. The discussion is linked on the TidyTuesday github page.
+
+```{r}
+
+
+renamed_set <- dataset %>%
+	rename(
+		   wasteid = WASTE_ID,
+		   source = SOURCE, 
+		   id = ORG_ID,
+		   name = WWTP_NAME,
+		   country = COUNTRY,
+		   country_iso = CNTRY_ISO,
+		   location_lat = LAT_WWTP,
+		   location_lon = LON_WWTP,
+		   quality_indicator = QUAL_LOC,
+		   latitude_out = LAT_OUT,
+		   longitude_out = LON_OUT,
+		   status = STATUS,
+		   populationserved = POP_SERVED,
+		   quality_population = QUAL_POP,
+		   discharged = WASTE_DIS,
+		   quality_discharged = QUAL_WASTE,
+		   level = LEVEL,
+		   quality_level = QUAL_LEVEL,
+		   df = DF,
+		   riverreach_id = HYRIV_ID,
+		   river_discharge = RIVER_DIS,
+		   tenkilo_outfall = COAST_10KM,
+		   fiftykilo_outfall = COAST_50KM,
+		   designcapacity = DESIGN_CAP,
+		   capacity_quality = QUAL_CAP
+	)
+```
+
+```{r}
+
+colnames(renamed_set)
+```
+
+After renaming the columns in our dataset, we can take a look at all of the variables:
+
+```{r}
+
+renamed_set["country"] %>%
+	distinct() %>%
+	print(n = 188)
+```
+
+```{r}
+
+library(ggthemes)
+
+renamed_set %>%
+	group_by(quality_indicator) %>%
+	ggplot(aes(location_lon, location_lat)) +
+	geom_point(color = renamed_set$quality_indicator, 
+			   size = 0.5) +
+	borders("world") +
+	theme_map() +
+	coord_map(xlim= c(-180, 180)) +
+	labs(title = "Quality of Location")
+```
+
+```{r}
+
+renamed_set %>%
+	group_by(country) %>%
+	ggplot(aes(x = country_iso, y = populationserved)) +
+	geom_col()
+```
+
