@@ -1,0 +1,56 @@
+---
+title: 'TidyTuesday Artists Dataset'
+date: '30 September 2022'
+output:
+	prettydoc::html_pretty:
+		theme: architect
+---
+
+```{r}
+
+tuesdata <- tidytuesdayR::tt_load(2022, week = 39)
+
+artists <- tuesdata$artists
+```
+
+```{r}
+
+library("tidyverse")
+
+head(artists)
+glimpse(artists)
+```
+
+```{r}
+
+colSums(is.na(artists))
+
+artists %>%
+	select(artists_n, artists_share, location_quotient) %>%
+	head(n = 15)
+```
+
+```{r}
+
+artists %>%
+	ggplot(aes(x = state, y =  artists_n)) +
+	geom_col() +
+	coord_flip()
+```
+
+```{r}
+
+str(artists)
+
+artists["state"] %>%
+    distinct() %>%
+    print(n = 100)
+
+states <- map_data("state")
+
+artists %>%
+    ggplot() +
+    geom_map(aes(map_id = artists$state, fill = artists_n), map = states)
+```
+
+

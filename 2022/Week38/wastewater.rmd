@@ -3,6 +3,7 @@ title: TidyTuesday Waste Water Treatment Plant Dataset EDA
 year: 2022
 week: 38
 author: (@dorrajmachai)[https://github.com/dorrajmachai]
+output: html_document
 ---
 
 # TidyTuesday 2022 - Week 38
