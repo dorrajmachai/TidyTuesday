@@ -1,0 +1,104 @@
+---
+title: Colorado Weather
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r}
+
+packages <- c("patchwork", "tidyverse", "tidytuesdayR", "ggthemes")
+lapply(packages, library, character.only = TRUE)
+```
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2022, week = 51)
+
+forecasts <- tuesdata$weather_forecasts
+cities <- tuesdata$cities
+outlook  <- tuesdata$outlook_meanings
+```
+
+```{r}
+
+head(forecasts)
+head(cities)
+head(outlook)
+```
+
+```{r}
+
+colorado <- forecasts %>%
+  filter(state == "CO") %>%
+  drop_na(forecast_temp)
+
+head(colorado)
+```
+
+```{r}
+
+colorado %>%
+  ggplot(aes(x = forecast_outlook)) +
+  geom_bar(aes(fill = city), position = position_dodge(width = 0.7)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1))
+```
+
+```{r}
+
+q1 <- colorado %>%
+    filter(city == "COLORADO_SPGS") %>%
+    ggplot(aes(x = date)) +
+    geom_point(aes(y = forecast_temp),
+              color = "blue",
+              size = 3,
+              alpha = 1 / 10) +
+    geom_point(aes(y = observed_temp),
+              color = "red",
+              size = 3,
+              alpha = 1 / 10) +
+    scale_x_date(date_labels = "%W",
+                 limits = as.Date(c("2021-01-30", "2021-3-30")))
+
+q2 <- colorado %>%
+    filter(city == "COLORADO_SPGS") %>%
+    ggplot(aes(x = date)) +
+    geom_point(aes(y = forecast_temp),
+              color = "blue",
+              size = 3,
+              alpha = 1 / 10) +
+    geom_point(aes(y = observed_temp),
+              color = "red",
+              size = 3,
+              alpha = 1 / 10) +
+    scale_x_date(date_labels = "%W",
+                 limits = as.Date(c("2021-04-30", "2021-6-30")))
+
+q3 <- colorado %>%
+    filter(city == "COLORADO_SPGS") %>%
+    ggplot(aes(x = date)) +
+    geom_point(aes(y = forecast_temp),
+              color = "blue",
+              size = 3,
+              alpha = 1 / 10) +
+    geom_point(aes(y = observed_temp),
+              color = "red",
+              size = 3,
+              alpha = 1 / 10) +
+    scale_x_date(date_labels = "%W",
+                 limits = as.Date(c("2021-07-30", "2021-9-30")))
+
+q4 <- colorado %>%
+    filter(city == "COLORADO_SPGS") %>%
+    ggplot(aes(x = date)) +
+    geom_point(aes(y = forecast_temp),
+              color = "blue",
+              size = 3,
+              alpha = 1 / 10) +
+    geom_point(aes(y = observed_temp),
+              color = "red",
+              size = 3,
+              alpha = 1 / 10) +
+    scale_x_date(date_labels = "%W",
+                 limits = as.Date(c("2021-10-30", "2021-12-30")))
+
+q1 + q2 + q3 + q4 + plot_layout(ncol = 2)
+```
